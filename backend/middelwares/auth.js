@@ -7,13 +7,12 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports = (req, res, next) => {
   // достаём авторизационный заголовок
-  const { authorization } = req.headers;
+  const token = req.headers.authorization;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new UnauthorizedError('Необходима авторизация'));
+  if (!token) {
+    return res.status(401).send({ message: 'Необходима авторизация' });
   }
-  // извлечём токен
-  const token = authorization.replace('Bearer ', '');
+
   let payload;
 
   try {
@@ -25,5 +24,5 @@ module.exports = (req, res, next) => {
 
   req.user = payload; // записываем пейлоуд в объект запроса
 
-  next(); // пропускаем запрос дальше
+  return next(); // пропускаем запрос дальше
 };
