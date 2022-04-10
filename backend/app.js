@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
-
+require('dotenv').config();
 const cors = require('cors');
 
 const { PORT = 3000 } = process.env;

@@ -1,6 +1,8 @@
 // middlewares/auth.js
 const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../config/constats');
+
+const { NODE_ENV, SECRET_KEY } = process.env;
+
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
 module.exports = (req, res, next) => {
@@ -16,7 +18,7 @@ module.exports = (req, res, next) => {
 
   try {
     // верифицируем токен
-    payload = jwt.verify(token, SECRET_KEY);
+    payload = jwt.verify(token, NODE_ENV === 'production' ? SECRET_KEY : 'dev-secret');
   } catch (err) {
     next(new UnauthorizedError('Необходима авторизация - не получилось верифицировать токен'));
   }
