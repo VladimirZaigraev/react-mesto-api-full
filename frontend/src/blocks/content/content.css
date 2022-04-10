@@ -1,0 +1,8 @@
+.content {
+  flex: 1 1 auto;
+}
+@media (max-width: 928px) {
+  .content {
+    padding: 0 19px 0 19px;
+  }
+}

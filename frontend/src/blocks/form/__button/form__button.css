@@ -1,0 +1,21 @@
+.form__button {
+  width: 358px;
+  height: 50px;
+  background-color: #fff;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-top: 216px;
+  -webkit-transition: opacity 0.5s linear;
+  transition: opacity 0.5s linear;
+}
+.form__button:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 400px) {
+  .form__button {
+    width: 260px;
+    margin-top: 173px;
+  }
+}

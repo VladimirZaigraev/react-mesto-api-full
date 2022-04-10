@@ -1,0 +1,6 @@
+.popup-status__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 30px 60px 30px;
+}

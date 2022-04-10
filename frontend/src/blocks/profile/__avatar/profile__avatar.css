@@ -1,0 +1,12 @@
+.profile__avatar {
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  -o-object-fit: cover;
+  object-fit: cover;
+  background-color: rgb(156, 156, 156);
+  background-image: url('../../../images/profile/profile__avatar.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}

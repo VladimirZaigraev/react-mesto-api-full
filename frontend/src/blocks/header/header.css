@@ -1,0 +1,13 @@
+.header {
+  padding: 45px 0 41px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-bottom: 1px solid rgb(84 84 84 / 70%);
+  justify-content: space-between;
+}
+@media (max-width: 684px) {
+  .header {
+    padding: 28px 0 31px 0;
+  }
+}

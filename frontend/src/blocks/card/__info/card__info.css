@@ -1,0 +1,17 @@
+.card__info {
+  background-color: #ffffff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 27px 16px 24px 21px;
+  border-radius: 0 0 10px 10px;
+  align-items: center;
+}
+@media (max-width: 684px) {
+  .card__info {
+    padding: 25px 21px 24px 21px;
+  }
+}

@@ -1,0 +1,19 @@
+.profile__info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  padding: 27px 0px 26px 0px;
+  min-width: 336px;
+}
+@media (max-width: 684px) {
+  .profile__info {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    min-width: 100%;
+    padding: 27px 0px 33px 0px;
+  }
+}

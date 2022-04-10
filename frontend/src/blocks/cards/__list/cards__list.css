@@ -1,0 +1,21 @@
+.cards__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: -ms-grid;
+  display: grid;
+  /*-ms-grid-columns: (minmax(282px, 1fr))[auto-fill];*/
+      grid-template-columns: repeat(auto-fill, minmax(282px, 1fr));
+  -ms-grid-rows: min-content;
+      grid-template-rows: -webkit-min-content;
+      grid-template-rows: min-content;
+  grid-column-gap: 17px;
+  grid-row-gap: 20px;
+}
+@media (max-width: 684px) {
+  .cards__list {
+    grid-row-gap: 22px;
+  }
+}

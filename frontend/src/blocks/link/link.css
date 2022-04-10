@@ -1,0 +1,16 @@
+.link {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  /* identical to box height */
+
+  text-align: center;
+  text-decoration: none;
+  color: #FFFFFF;
+  -webkit-transition: opacity 0.5s linear;
+  transition: opacity 0.5s linear;
+}
+.link:hover{
+  opacity: 0.6;
+}

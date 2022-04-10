@@ -1,0 +1,23 @@
+.profile__button-edit {
+  width: 24px;
+  height: 24px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background-image: url("../../../images/profile/profile__edit.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-transition: opacity 0.5s linear;
+  transition: opacity 0.5s linear;
+  margin: 14px 0 0 19px;
+  border: 1px solid #FFFFFF;
+}
+.profile__button-edit:hover {
+  opacity: 0.6;
+}
+@media (max-width: 684px) {
+  .profile__button-edit {
+    width: 18px;
+    height: 18px;
+    margin: 7px 0 0 10px;
+  }
+}
