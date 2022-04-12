@@ -12,7 +12,7 @@ class Api {
       method: 'GET',
       headers: this._headers,
     })
-    .then(this._checkResult);
+      .then(this._checkResult);
   }
   //передаем данные пользователя
   editUserInfo(userInfoData) {
@@ -21,7 +21,7 @@ class Api {
       headers: this._headers,
       body: JSON.stringify((userInfoData))
     })
-    .then(this._checkResult);
+      .then(this._checkResult);
   }
   //загрузка карточек
   getInitialCards() {
@@ -29,7 +29,7 @@ class Api {
       method: 'GET',
       headers: this._headers,
     })
-    .then(this._checkResult);
+      .then(this._checkResult);
   }
   //добавить карточку
   addCard(newCard) {
@@ -38,7 +38,7 @@ class Api {
       headers: this._headers,
       body: JSON.stringify(newCard)
     })
-    .then(this._checkResult);
+      .then(this._checkResult);
   }
   //удалить карточку
   deleteCard(cardId) {
@@ -46,7 +46,7 @@ class Api {
       method: 'DELETE',
       headers: this._headers
     })
-    .then(this._checkResult);
+      .then(this._checkResult);
   }
   //добавление лайка
   addLike(cardId) {
@@ -77,7 +77,7 @@ class Api {
   }
 
   _checkResult(res) {
-    if(res.ok) {
+    if (res.ok) {
       return res.json();
     }
     return Promise.reject(`Ошибка: ${res.status}`)
@@ -97,13 +97,12 @@ class Api {
     }
   }
 
-  }
+}
 
- const api = new Api ({
-  baseUrl:' https://mesto.nomoreparties.co/v1/cohort-31',
+const api = new Api({
+  baseUrl: 'https://api.zaigraev.nomoredomains.work',
   headers: {
-  'authorization': '24ef9ba1-0ad2-4b71-9814-7ab373ebe0b5',
-  'content-Type': 'application/json',
+    'content-Type': 'application/json',
   }
 });
 export default api;
