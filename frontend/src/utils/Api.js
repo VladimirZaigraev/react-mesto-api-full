@@ -103,6 +103,7 @@ const api = new Api({
   baseUrl: 'https://api.zaigraev.nomoredomains.work',
   headers: {
     'content-Type': 'application/json',
+    'Authorization': `${localStorage.getItem('jwt')}`,
   }
 });
 export default api;
