@@ -1,4 +1,4 @@
-export const BASE_URL = "https://auth.nomoreparties.co";
+export const BASE_URL = "https://api.zaigraev.nomoredomains.work";
 
 const headers = {
   Accept: "application/json",
@@ -33,6 +33,7 @@ export const checkToken = (token) => {
     },
   }).then(checkResult);
 };
+
 export const showError = (err, text) => {
   console.groupCollapsed('%c Auth error', 'color: red')
   console.log(err, text)
