@@ -1,5 +1,6 @@
 /*Класс Api -- это класс, который не связан с пользовательским интерфейсом,
 а полностью занят отправкой запросов на сервер и получением от них ответа. */
+import urlBase from './auth.js'
 
 class Api {
   constructor(config) {
@@ -95,7 +96,6 @@ class Api {
 
   // заменяем аватар пользователя
   editUserAvatar(link, token) {
-    console.log(link)
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: {
@@ -109,7 +109,7 @@ class Api {
   }
 
   _checkResult(res) {
-    console.log(res)
+    // console.log(res)
     if (res.ok) {
       return res.json();
     }
@@ -123,7 +123,6 @@ class Api {
   }
 
   changeLikeCardStatus(cardId, isLiked, token) {
-    console.log(cardId)
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`,
       {
         method: isLiked ? "PUT" : "DELETE",
@@ -136,6 +135,6 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'http://localhost:3000',
+  baseUrl: urlBase,
 });
 export default api;

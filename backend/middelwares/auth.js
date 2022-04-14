@@ -8,7 +8,7 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 module.exports = (req, res, next) => {
   // достаём авторизационный заголовок
   const token = req.headers.authorization.replace('Bearer ', '');
-  console.log('auth token', token);
+  // console.log('auth token', token);
   if (!token) {
     return res.status(401).send({ message: 'Необходима авторизация' });
   }

@@ -1,5 +1,5 @@
-// export const BASE_URL = "https://api.zaigraev.nomoredomains.work";
-export const BASE_URL = 'http://localhost:3000';
+const BASE_URL = "https://api.zaigraev.nomoredomains.work";
+// const BASE_URL = 'http://localhost:3000';
 
 const headers = {
   'Accept': 'application/json',
@@ -52,3 +52,5 @@ export const showError = (err, text) => {
   console.log(err, text)
   console.groupEnd()
 }
+
+export default BASE_URL;

@@ -30,25 +30,22 @@ const App = () => {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [infoToolTipData, setInfoToolTipData] = useState({ message: "", icon: false });
   const history = useHistory();
+  const tokenLocalStorage = localStorage.getItem('token');
 
-  // Проверка токена пользователя ДУБЛЬ
+  // Проверка токена пользователя
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    console.log('token', token)
-    if (token) {
-      auth.checkToken(token)
+    if (tokenLocalStorage) {
+      auth.checkToken(tokenLocalStorage)
         .then(() => {
           setLoggedIn(true);
-          api.getUserInfo(token)
+          api.getUserInfo(tokenLocalStorage)
             .then((userData) => {
-              console.log(userData)
               setEmail(userData.user.email);
               setCurrentUser(userData.user);
               history.push('/');
             })
-          api.getInitialCards(token)
+          api.getInitialCards(tokenLocalStorage)
             .then((card) => {
-              console.log(card)
               setCards(card.reverse());
             })
           history.push('/');
@@ -57,25 +54,12 @@ const App = () => {
     }
   }, [loggedIn, history]);
 
-  // useEffect(() => {
-  //   api.getUserInfo()
-  //     .then(userData => setCurrentUser(userData))
-  //     .catch(api.showError)
-  // }, [])
-
-  // useEffect(() => {
-  //   api.getInitialCards()
-  //     .then(card => setCards(card))
-  //     .catch(api.showError)
-  // }, [])
-
   // изменение информации о пользователе
   const handleUpdateUser = (userData) => {
     setIsLoading(true)
-    const token = localStorage.getItem('jwt');
-    api.editUserInfo(userData, token)
+
+    api.editUserInfo(userData, tokenLocalStorage)
       .then((userData) => {
-        // console.log('then', userData)
         setCurrentUser(userData);
         closeAllPopups();
       })
@@ -86,8 +70,8 @@ const App = () => {
   // обновление аватара
   const handleUpdateAvatar = (avatar) => {
     setIsLoading(true)
-    const token = localStorage.getItem('jwt');
-    api.editUserAvatar(avatar, token)
+
+    api.editUserAvatar(avatar, tokenLocalStorage)
       .then(newUserInfo => {
         setCurrentUser(newUserInfo)
         closeAllPopups()
@@ -99,8 +83,8 @@ const App = () => {
   // добавление карточки
   const handleAddPlaceSubmit = (newCard) => {
     setIsLoading(true)
-    const token = localStorage.getItem('jwt');
-    api.addCard(newCard, token)
+
+    api.addCard(newCard, tokenLocalStorage)
       .then(newCard => {
         setCards([newCard, ...cards])
         closeAllPopups()
@@ -112,19 +96,19 @@ const App = () => {
   const handleCardLike = (card) => {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(id => id === currentUser._id);
-
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    const token = localStorage.getItem('jwt');
-    api.changeLikeCardStatus(card._id, !isLiked, token)
+
+    api.changeLikeCardStatus(card._id, !isLiked, tokenLocalStorage)
       .then((newCard) => {
         setCards(state => state.map((c) => c._id === card._id ? newCard : c));
       })
       .catch(api.showError)
   }
 
+  //удаление карточки
   const handleCardDelete = (card) => {
-    const token = localStorage.getItem('jwt');
-    api.deleteCard(card._id, token)
+
+    api.deleteCard(card._id, tokenLocalStorage)
       .then(_ => {
         setCards(state => state.filter(c => c._id !== card._id))
       })
@@ -154,30 +138,6 @@ const App = () => {
     setIsInfoTooltipOpen(false);
     setSelectedCard({ name: '', link: '' });
   }
-
-  // useEffect(() => {
-  //   tokenCheck();
-  // }, []);
-
-  // const tokenCheck = () => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     auth
-  //       .checkToken(token)
-  //       .then((res) => {
-  //         if (res.data.email) {
-  //           setEmail(res.data.email);
-  //           setLoggedIn(true);
-  //           history.push("/");
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         if (err === 400)
-  //           return auth.showError(err, "Токен не передан или передан не в том формате");
-  //         if (err === 401) return auth.showError(err, "Переданный токен некорректен");
-  //       });
-  //   }
-  // }
 
   // регистрация пользователя
   const onRegister = (email, password) => {
@@ -209,15 +169,13 @@ const App = () => {
   const onLogin = (email, password) => {
     //console.log(email, password, localStorage.getItem('jwt'))
     return auth
-      .authorize(email, password, localStorage.getItem('jwt'))
+      .authorize(email, password, localStorage.getItem('token'))
       .then((res) => {
-        // console.log(res);
         if (res.token) {
-          localStorage.setItem("jwt", res.token);
+          localStorage.setItem('token', res.token);
           setLoggedIn(true);
           api.getUserInfo(res.token)
             .then((res) => {
-              console.log(res)
               setEmail(res.user.email);
               setCurrentUser(res.user);
               history.push('/');

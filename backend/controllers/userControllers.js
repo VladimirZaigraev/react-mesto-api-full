@@ -126,7 +126,6 @@ const updateUser = async (req, res, next) => {
 };
 
 const updateAvatar = async (req, res, next) => {
-  console.log('updateAvatar', req.body);
   try {
     const { avatar } = req.body;
     const userId = req.user._id;

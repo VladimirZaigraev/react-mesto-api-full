@@ -6,8 +6,7 @@ const Card = (props) => {
 
   const currentUser = useContext(CurrentUserContext);
   const isOwn = card.owner === currentUser._id;
-  console.log(currentUser._id)
-  console.log(card)
+
   // Создаём переменную, которую после зададим в `className` для кнопки удаления
   const cardDeleteButtonClassName = (
     `button card__delete ${isOwn ? 'card__delete-visible' : 'card__delete-hidden'}`
