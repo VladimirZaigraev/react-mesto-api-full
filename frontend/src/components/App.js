@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute.js';
 
 import Header from './Header.js';
@@ -9,7 +9,7 @@ import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import api from '../utils/Api';
 import * as auth from '../utils/auth';
-import {CurrentUserContext} from '../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup.js';
@@ -18,79 +18,113 @@ import Register from './Register';
 import InfoToolTip from './InfoTooltip.js';
 
 const App = () => {
-
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({name: '', link: ''});
+  const [selectedCard, setSelectedCard] = useState({ name: '', link: '' });
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-  const [infoToolTipData, setInfoToolTipData] = useState({message: "", icon: false});
+  const [infoToolTipData, setInfoToolTipData] = useState({ message: "", icon: false });
   const history = useHistory();
 
+  // Проверка токена пользователя ДУБЛЬ
   useEffect(() => {
-    api.getUserInfo()
-      .then(userData => setCurrentUser(userData))
-      .catch(api.showError)
-    }, [])
+    const token = localStorage.getItem('jwt');
+    console.log('token', token)
+    if (token) {
+      auth.checkToken(token)
+        .then(() => {
+          setLoggedIn(true);
+          api.getUserInfo(token)
+            .then((userData) => {
+              console.log(userData)
+              setEmail(userData.user.email);
+              setCurrentUser(userData.user);
+              history.push('/');
+            })
+          api.getInitialCards(token)
+            .then((card) => {
+              console.log(card)
+              setCards(card.reverse());
+            })
+          history.push('/');
+        })
+        .catch(api.showError)
+    }
+  }, [loggedIn, history]);
 
-  useEffect(() => {
-    api.getInitialCards()
-      .then(card => setCards(card))
-      .catch(api.showError)
-  }, [])
+  // useEffect(() => {
+  //   api.getUserInfo()
+  //     .then(userData => setCurrentUser(userData))
+  //     .catch(api.showError)
+  // }, [])
 
-  const handleUpdateUser = (userInfo) => {
+  // useEffect(() => {
+  //   api.getInitialCards()
+  //     .then(card => setCards(card))
+  //     .catch(api.showError)
+  // }, [])
+
+  // изменение информации о пользователе
+  const handleUpdateUser = (userData) => {
     setIsLoading(true)
-    api.editUserInfo(userInfo)
-      .then(newUserInfo => {
-        setCurrentUser(newUserInfo)
-        closeAllPopups()
+    const token = localStorage.getItem('jwt');
+    api.editUserInfo(userData, token)
+      .then((userData) => {
+        // console.log('then', userData)
+        setCurrentUser(userData);
+        closeAllPopups();
       })
       .catch(api.showError)
-      .finally(()=>setIsLoading(false))
+      .finally(() => setIsLoading(false))
   }
 
+  // обновление аватара
   const handleUpdateAvatar = (avatar) => {
     setIsLoading(true)
-    api.editUserAvatar(avatar)
+    const token = localStorage.getItem('jwt');
+    api.editUserAvatar(avatar, token)
       .then(newUserInfo => {
         setCurrentUser(newUserInfo)
         closeAllPopups()
       })
       .catch(api.showError)
-      .finally(()=>setIsLoading(false))
+      .finally(() => setIsLoading(false))
   }
 
+  // добавление карточки
   const handleAddPlaceSubmit = (newCard) => {
     setIsLoading(true)
-    api.addCard(newCard)
+    const token = localStorage.getItem('jwt');
+    api.addCard(newCard, token)
       .then(newCard => {
         setCards([newCard, ...cards])
         closeAllPopups()
       })
       .catch(api.showError)
-      .finally(()=>setIsLoading(false))
+      .finally(() => setIsLoading(false))
   }
-
+  // лайк\дизлайк
   const handleCardLike = (card) => {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(like => like._id === currentUser._id);
+    const isLiked = card.likes.some(id => id === currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, isLiked)
+    const token = localStorage.getItem('jwt');
+    api.changeLikeCardStatus(card._id, !isLiked, token)
       .then((newCard) => {
-      setCards(state => state.map((c) => c._id === card._id ? newCard : c));
+        setCards(state => state.map((c) => c._id === card._id ? newCard : c));
       })
       .catch(api.showError)
   }
 
   const handleCardDelete = (card) => {
-    api.deleteCard(card._id)
+    const token = localStorage.getItem('jwt');
+    api.deleteCard(card._id, token)
       .then(_ => {
         setCards(state => state.filter(c => c._id !== card._id))
       })
@@ -118,42 +152,45 @@ const App = () => {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsInfoTooltipOpen(false);
-    setSelectedCard({name: '', link: ''});
+    setSelectedCard({ name: '', link: '' });
   }
 
-  useEffect(() => {
-    tokenCheck();
-  }, []);
+  // useEffect(() => {
+  //   tokenCheck();
+  // }, []);
 
-  const tokenCheck = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      auth
-        .checkToken(token)
-        .then((res) => {
-          if (res.data.email) {
-            setEmail(res.data.email);
-            setLoggedIn(true);
-            history.push("/");
-          }
-        })
-        .catch((err) => {
-          if (err === 400)
-            return auth.showError(err , "Токен не передан или передан не в том формате");
-          if (err === 401) return auth.showError(err , "Переданный токен некорректен");
-        });
-    }
-  }
+  // const tokenCheck = () => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     auth
+  //       .checkToken(token)
+  //       .then((res) => {
+  //         if (res.data.email) {
+  //           setEmail(res.data.email);
+  //           setLoggedIn(true);
+  //           history.push("/");
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         if (err === 400)
+  //           return auth.showError(err, "Токен не передан или передан не в том формате");
+  //         if (err === 401) return auth.showError(err, "Переданный токен некорректен");
+  //       });
+  //   }
+  // }
 
+  // регистрация пользователя
   const onRegister = (email, password) => {
-    auth
+    return auth
       .register(email, password)
-      .then((res) => {
-        if (res.data.email) {
+      .then((email) => {
+        console.log(email)
+        if (email) {
           setLoggedIn(true);
           setInfoToolTipData({
             icon: true,
-            message: "Вы успешно зарегистрировались!" });
+            message: "Вы успешно зарегистрировались!"
+          });
           history.push("/sign-in");
         }
       })
@@ -163,20 +200,34 @@ const App = () => {
           message: "Что-то пошло не так! Попробуйте ещё раз.",
         });
         if (err === "Ошибка: 400")
-          auth.showError(err , " некорректно заполнено одно из полей ");
+          auth.showError(err, " некорректно заполнено одно из полей ");
       })
-      .finally(()=>setIsInfoTooltipOpen(true))
+      .finally(() => setIsInfoTooltipOpen(true))
   }
 
+  // авторизация пользователя
   const onLogin = (email, password) => {
-    auth
-      .authorize(email, password)
+    //console.log(email, password, localStorage.getItem('jwt'))
+    return auth
+      .authorize(email, password, localStorage.getItem('jwt'))
       .then((res) => {
+        // console.log(res);
         if (res.token) {
-          localStorage.setItem("token", res.token);
+          localStorage.setItem("jwt", res.token);
           setLoggedIn(true);
-          setEmail(email);
-          history.push("/");
+          api.getUserInfo(res.token)
+            .then((res) => {
+              console.log(res)
+              setEmail(res.user.email);
+              setCurrentUser(res.user);
+              history.push('/');
+              setIsInfoTooltipOpen(false);
+            })
+          api.getInitalCards(res.token)
+            .then((res) => {
+              setCards(res.cards);
+            })
+          history.push('/');
         }
       })
       .catch((err) => {
@@ -243,7 +294,7 @@ const App = () => {
             cards={cards}
             setCards={setCards}
           />
-           <Route path="/sign-in">
+          <Route path="/sign-in">
             <Login onLogin={onLogin} />
           </Route>
           <Route path="/sign-up">
@@ -286,7 +337,7 @@ const App = () => {
         isLoading={isLoading}
       />
 
-      <PopupWithForm name="delete" title="Вы уверены?" buttonText="Да"/>
+      <PopupWithForm name="delete" title="Вы уверены?" buttonText="Да" />
     </CurrentUserContext.Provider>
   );
 }

@@ -6,77 +6,110 @@ class Api {
     this._baseUrl = config.baseUrl;
     this._headers = config.headers;
   }
-  //получаем данные пользователя
-  getUserInfo() {
+
+  // получаем данные пользователя
+  getUserInfo(token) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'GET',
-      headers: this._headers,
+      headers: {
+        // 'content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
     })
       .then(this._checkResult);
   }
-  //передаем данные пользователя
-  editUserInfo(userInfoData) {
+
+  // передаем данные пользователя
+  editUserInfo(userData, token) {
     return fetch(`${this._baseUrl}/users/me`, {
-      method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify((userInfoData))
+      method: "PATCH",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: userData.name,
+        about: userData.about,
+      }),
     })
       .then(this._checkResult);
   }
-  //загрузка карточек
-  getInitialCards() {
+  // загрузка карточек
+  getInitialCards(token) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'GET',
-      headers: this._headers,
+      headers: {
+        'content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
     })
       .then(this._checkResult);
   }
   //добавить карточку
-  addCard(newCard) {
+  addCard(newCard, token) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
-      headers: this._headers,
-      body: JSON.stringify(newCard)
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: newCard.name,
+        link: newCard.link,
+      }),
     })
       .then(this._checkResult);
   }
   //удалить карточку
-  deleteCard(cardId) {
+  deleteCard(cardId, token) {
     return fetch(`${this._baseUrl}/cards/${cardId}`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     })
       .then(this._checkResult);
   }
+
   //добавление лайка
-  addLike(cardId) {
+  addLike(cardId, token) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: 'PUT',
-      headers: this._headers
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     })
       .then(this._checkResult)
   }
 
   //удаление лайка
-  removeLike(cardId) {
+  removeLike(cardId, token) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     })
       .then(this._checkResult)
   }
 
-  //заменяем данные пользователя
-  editUserAvatar(avatarLink) {
+  // заменяем аватар пользователя
+  editUserAvatar(link, token) {
+    console.log(link)
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify(avatarLink)
-    })
-      .then(this._checkResult);
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        avatar: link,
+      }),
+    }).then(this._checkResult);
   }
 
   _checkResult(res) {
+    console.log(res)
     if (res.ok) {
       return res.json();
     }
@@ -89,21 +122,20 @@ class Api {
     console.groupEnd()
   }
 
-  changeLikeCardStatus(cardId, isLiked) {
-    if (isLiked) {
-      return this.removeLike(cardId);
-    } else {
-      return this.addLike(cardId);
-    }
+  changeLikeCardStatus(cardId, isLiked, token) {
+    console.log(cardId)
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`,
+      {
+        method: isLiked ? "PUT" : "DELETE",
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }).then(this._checkResult);
   }
 
 }
 
 const api = new Api({
-  baseUrl: 'https://api.zaigraev.nomoredomains.work',
-  headers: {
-    'content-Type': 'application/json',
-    //'Authorization': `${localStorage.getItem('jwt')}`,
-  }
+  baseUrl: 'http://localhost:3000',
 });
 export default api;

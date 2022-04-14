@@ -1,10 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { SALT_ROUND, SECRET_KEY } = require('../config/constats');
+const { SALT_ROUND } = require('../config/constats');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
+
+const { JWT_SECRET } = process.env;
 
 const getUsers = async (req, res, next) => {
   try {
@@ -63,7 +65,7 @@ const loginUser = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // создадим токен
-      const token = jwt.sign({ _id: user._id }, SECRET_KEY, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       // вернём токен
       res.send({ token });
     })
@@ -93,11 +95,13 @@ const getUserById = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
+    console.log('updateUser', req.body);
     const { name, about } = req.body;
     const userId = req.user._id;
 
     const user = await User.findByIdAndUpdate(
       userId,
+      // req.body,
       {
         name,
         about,
@@ -122,6 +126,7 @@ const updateUser = async (req, res, next) => {
 };
 
 const updateAvatar = async (req, res, next) => {
+  console.log('updateAvatar', req.body);
   try {
     const { avatar } = req.body;
     const userId = req.user._id;
