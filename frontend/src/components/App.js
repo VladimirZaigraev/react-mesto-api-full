@@ -144,7 +144,6 @@ const App = () => {
     return auth
       .register(email, password)
       .then((email) => {
-        console.log(email)
         if (email) {
           setLoggedIn(true);
           setInfoToolTipData({
