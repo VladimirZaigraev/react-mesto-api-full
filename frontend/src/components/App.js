@@ -30,21 +30,21 @@ const App = () => {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [infoToolTipData, setInfoToolTipData] = useState({ message: "", icon: false });
   const history = useHistory();
-  const tokenLocalStorage = localStorage.getItem('token');
+  // let tokenLocalStorage = localStorage.getItem('token');
 
   // Проверка токена пользователя
   useEffect(() => {
-    if (tokenLocalStorage) {
-      auth.checkToken(tokenLocalStorage)
+    const token = localStorage.getItem('token');
+    if (token) {
+      auth.checkToken(token)
         .then(() => {
           setLoggedIn(true);
-          api.getUserInfo(tokenLocalStorage)
+          api.getUserInfo(token)
             .then((userData) => {
               setEmail(userData.user.email);
               setCurrentUser(userData.user);
-              history.push('/');
             })
-          api.getInitialCards(tokenLocalStorage)
+          api.getInitialCards(token)
             .then((card) => {
               setCards(card.reverse());
             })
@@ -52,13 +52,13 @@ const App = () => {
         })
         .catch(api.showError)
     }
-  }, [loggedIn, history]);
+  }, [loggedIn]);
 
   // изменение информации о пользователе
   const handleUpdateUser = (userData) => {
     setIsLoading(true)
-
-    api.editUserInfo(userData, tokenLocalStorage)
+    const token = localStorage.getItem('token');
+    api.editUserInfo(userData, token)
       .then((userData) => {
         setCurrentUser(userData);
         closeAllPopups();
@@ -70,8 +70,8 @@ const App = () => {
   // обновление аватара
   const handleUpdateAvatar = (avatar) => {
     setIsLoading(true)
-
-    api.editUserAvatar(avatar, tokenLocalStorage)
+    const token = localStorage.getItem('token');
+    api.editUserAvatar(avatar, token)
       .then(newUserInfo => {
         setCurrentUser(newUserInfo)
         closeAllPopups()
@@ -83,8 +83,8 @@ const App = () => {
   // добавление карточки
   const handleAddPlaceSubmit = (newCard) => {
     setIsLoading(true)
-
-    api.addCard(newCard, tokenLocalStorage)
+    const token = localStorage.getItem('token');
+    api.addCard(newCard, token)
       .then(newCard => {
         setCards([newCard, ...cards])
         closeAllPopups()
@@ -97,8 +97,8 @@ const App = () => {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some(id => id === currentUser._id);
     // Отправляем запрос в API и получаем обновлённые данные карточки
-
-    api.changeLikeCardStatus(card._id, !isLiked, tokenLocalStorage)
+    const token = localStorage.getItem('token');
+    api.changeLikeCardStatus(card._id, !isLiked, token)
       .then((newCard) => {
         setCards(state => state.map((c) => c._id === card._id ? newCard : c));
       })
@@ -107,8 +107,8 @@ const App = () => {
 
   //удаление карточки
   const handleCardDelete = (card) => {
-
-    api.deleteCard(card._id, tokenLocalStorage)
+    const token = localStorage.getItem('token');
+    api.deleteCard(card._id, token)
       .then(_ => {
         setCards(state => state.filter(c => c._id !== card._id))
       })
@@ -166,7 +166,7 @@ const App = () => {
 
   // авторизация пользователя
   const onLogin = (email, password) => {
-    //console.log(email, password, localStorage.getItem('jwt'))
+    //console.log(email, password)
     return auth
       .authorize(email, password, localStorage.getItem('token'))
       .then((res) => {
@@ -202,7 +202,8 @@ const App = () => {
   }
 
   const onSignOut = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
+    setCurrentUser({})
     setLoggedIn(false);
     setEmail("");
     history.push("/sign-in");

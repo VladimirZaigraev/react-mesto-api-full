@@ -131,7 +131,6 @@ class Api {
         },
       }).then(this._checkResult);
   }
-
 }
 
 const api = new Api({
