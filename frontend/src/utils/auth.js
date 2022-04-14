@@ -23,7 +23,6 @@ export const register = (email, password) => {
 
 // авторизация /sign-in
 export const authorize = (email, password, token) => {
-  console.log(email, password, token)
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     headers
