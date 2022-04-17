@@ -1,10 +1,11 @@
 <h1 align="center">MESTO</h1>
-![Image alt](https://github.com/VladimirZaigraev/react-mesto-api-full/blob/main/screenshot/Screenshot.jpg)
+![Image alt](https://github.com/VladimirZaigraev/react-mesto-api-full/raw/main/screenshot/Screenshot.jpg)
 
 Интерактивная страница, для добавления фотографии мест, с возможностью просмотра и ставить лайки фотографиям других пользователей. Реализован функционал регистрации, авторизации, редактирования профиля, добавления изображений в галерею по ссылкам. 
   
 Ссылка на сайт: [https://zaigraev.nomoredomains](https://zaigraev.nomoredomains)
-Публинчый ip: [51.250.105.148] 51.250.105.148
+Публинчый ip: [51.250.105.148](51.250.105.148)
+
 
 ### Технологии
 
@@ -29,6 +30,7 @@
   - ESLint(airbnb-base) - стандартизация кода
 
 Сервер развернут на виртуальной машине Yandex.Cloud, подключен nginx для перенаправления запросов с 80 порта на порт, который слушает Node.
+
 
 ### Инструкция по развёртыванию
 
