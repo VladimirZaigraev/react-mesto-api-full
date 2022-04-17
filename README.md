@@ -1,6 +1,5 @@
-# MESTO
 <h1 align="center">MESTO</h1>
-![Image alt](https://github.com//VladimirZaigraev/react-mesto-api-full/raw/master/screenshot/Screenshot.jpg)
+![Image alt](https://github.com/VladimirZaigraev/react-mesto-api-full/blob/main/screenshot/Screenshot.jpg)
 
 Интерактивная страница, для добавления фотографии мест, с возможностью просмотра и ставить лайки фотографиям других пользователей. Реализован функционал регистрации, авторизации, редактирования профиля, добавления изображений в галерею по ссылкам. 
   
