@@ -1,9 +1,11 @@
 <h1 align="center">MESTO</h1>
-![Главная страница](https://github.com/VladimirZaigraev/react-mesto-api-full/blob/main/screenshot/Screenshot.jpg)
+
+![Screenshot](https://github.com/VladimirZaigraev/react-mesto-api-full/blob/main/screenshot/Screenshot.jpg)
 
 Интерактивная страница, для добавления фотографии мест, с возможностью просмотра и ставить лайки фотографиям других пользователей. Реализован функционал регистрации, авторизации, редактирования профиля, добавления изображений в галерею по ссылкам. 
   
 Ссылка на сайт: [https://zaigraev.nomoredomains](https://zaigraev.nomoredomains)
+
 Публинчый ip: [51.250.105.148](51.250.105.148)
 
 
