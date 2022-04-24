@@ -37,3 +37,6 @@
 npm i - установка модулей
 
 npm run start - запуск frontend/backend
+
+<h3 align="center">Ограничения</h1>
+react-router-dom 5
